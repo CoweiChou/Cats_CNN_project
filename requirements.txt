@@ -1,0 +1,7 @@
+line-bot-sdk
+flask
+pillow
+pytorch
+uwsgi
+torchvision
+torchsummary
