@@ -8,18 +8,18 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import PIL
 
-# 建立 Flask app
+
 app = Flask(__name__)
 
-# 模型的路徑
+
 MODEL_PATH = 'model.pth'
 
-# 加載模型並移至適當的裝置
+
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = torch.load(MODEL_PATH, map_location=device)
-model.eval()  # 設定為評估模式
+model.eval()
 
-# 定義圖像轉換
+
 transform = transforms.Compose([
     transforms.Resize((224, 224)),
     transforms.ToTensor(),
@@ -37,15 +37,6 @@ def extract_features(img_path):
         print(f"Skipped non-image file: {img_path}")
 
 
-# # 遍歷圖像文件夹
-# image_folder = "dataset"
-# for filename in os.listdir(image_folder):
-#     if filename.lower().endswith(('.jpg', '.png', '.jpeg')) and not filename.startswith('.') and filename != ".DS_Store":  
-#         img_path = os.path.join(image_folder, filename)
-#         extract_features(img_path)
-
-
-
 
 # 辨識花色前處理函數
 def preprocess_image(image_path):
@@ -60,7 +51,7 @@ def preprocess_image(image_path):
     return image
 
 # 提取數據集中所有圖像的特徵並存儲在內存中
-dataset_path = 'dataset'  # 替換為您的資料集路徑
+dataset_path = 'dataset'
 features = []
 img_paths = []
 for img_name in os.listdir(dataset_path):
@@ -87,7 +78,7 @@ def predict():
         filename = secure_filename(file.filename)
         filepath = os.path.join('/tmp', filename)
         file.save(filepath)
-        image = preprocess_image(filepath)  # 請確保您有定義適當的 preprocess_image 函數
+        image = preprocess_image(filepath)
         with torch.no_grad():
             input_batch = image.to(device)
             output = model(input_batch)
